@@ -24,3 +24,6 @@ class Deck():
 
 
         print("Deck Length:", str(len(self.deckList)))
+
+    def getDeckList(self):
+        return self.deckList
