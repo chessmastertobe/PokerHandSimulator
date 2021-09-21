@@ -4,6 +4,7 @@ class Card:
         self.mSuit = suit
         self.mColor = color
         self.mType = type
+        return
 
     def getSuit(self):
         return self.mSuit
@@ -13,3 +14,7 @@ class Card:
 
     def getType(self):
         return self.mType
+
+    def printCard(self):
+        print("Card suit:", self.mSuit, "Card color:", self.mColor, "Card Type:", self.mType)
+        return

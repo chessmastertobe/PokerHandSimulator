@@ -8,19 +8,22 @@ def main():
     curDeck.buildDeck()
     deckList = generateCombinations(curDeck.getDeckList())
     checkForRoyalFlush(deckList)
+    checkHands(deckList)
 
 # there are 2598960 ways to get 5 cards from deck of 52 cards
 def generateCombinations(lst):
-    total = list(combinations(lst, 5))
+    comboList = list(combinations(lst, 5))
     # Deck format
     # [ (card("diamonds", "red", "ace"),card())
     #   ...
     # ]
 
 
-    print("Total combinations:", str(len(total)))
+    print("Total combinations:", str(len(comboList)))
 
-    return total
+
+
+    return comboList
 
 # recieves a list of touples of five length
 def checkHands(lst):
@@ -61,7 +64,22 @@ def checkForRoyalFlush(deckList):
     for i in len(deckList):
         if(deckList[i][0].getType() == "ace")
     '''
-    return
+    # Try a for loop system where we check if an ace is in any of all the cards in the touples of five
+    for i in range(len(deckList)):
+        # First we look through each of the card combinations in the deck
+        # then we loop through each of the touples of five that are
+        # the combinations themselves
+        hasAce = False
+        for j in range(len(deckList[i])):
+            if(deckList[i][j].getType() == "ace"):
+                print("Found an ace at")
+                deckList[i][j].printCard()
+                hasAce = True
+                # if we found an Ace then we can break out of the loop
+                break
+
+
+    return total
 
 
 
