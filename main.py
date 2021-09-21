@@ -7,7 +7,7 @@ def main():
     curDeck = deck.Deck()
     curDeck.buildDeck()
     deckList = generateCombinations(curDeck.getDeckList())
-    checkForRoyalFlush(deckList)
+    print("RoyalFlushes:", str(checkForRoyalFlushes(deckList)))
     checkHands(deckList)
 
 # there are 2598960 ways to get 5 cards from deck of 52 cards
@@ -57,7 +57,7 @@ def checkHands(lst):
         # If none of the above occur, then nothing
     return
 
-def checkForRoyalFlush(deckList):
+def checkForRoyalFlushes(deckList):
     #print(deckList[0][0].getColor())
     total = 0
     '''
@@ -69,17 +69,57 @@ def checkForRoyalFlush(deckList):
         # First we look through each of the card combinations in the deck
         # then we loop through each of the touples of five that are
         # the combinations themselves
-        hasAce = False
-        for j in range(len(deckList[i])):
-            if(deckList[i][j].getType() == "ace"):
-                print("Found an ace at")
-                deckList[i][j].printCard()
-                hasAce = True
-                # if we found an Ace then we can break out of the loop
-                break
+        hasAce = checkForType(deckList[i], "ace")
+        hasKing = checkForType(deckList[i], "king")
+        hasQueen = checkForType(deckList[i], "queen")
+        hasJack = checkForType(deckList[i], "jack")
+        hasTen = checkForType(deckList[i], "ten")
+        sameSuit = checkAllSameSuit(deckList[i])
+        sameColor = checkAllSameColor(deckList[i])
+
+        if(hasAce == True
+        and hasKing == True
+        and hasQueen == True
+        and hasJack == True
+        and hasTen == True
+        and sameSuit == True
+        and sameColor == True):
+            total += 1
 
 
     return total
+
+def checkForType(cardset, type):
+    hasType = False
+    for i in range(len(cardset)):
+        if(cardset[i].getType() == type):
+            hasType = True
+            # if we found the type then we can break out of the loop
+            break
+    return hasType
+
+def checkAllSameSuit(cardset):
+    suit = cardset[0].getSuit()
+    # if all are going to have the same suit, it will be idential to the first
+    counter = 0
+    for i in range(len(cardset)):
+        if(cardset[i].getSuit() == suit):
+            counter += 1
+    # if the counter is 5, then they are all in the same suit
+    return counter == 5
+
+def checkAllSameColor(cardset):
+    color = cardset[0].getColor()
+    # if all are going to have the same suit, it will be idential to the first
+    counter = 0
+    for i in range(len(cardset)):
+        if(cardset[i].getColor() == color):
+            counter += 1
+    # if the counter is 5, then they are all in the same suit
+    return counter == 5
+
+def evalutateSeries(cardset):
+    return
 
 
 
