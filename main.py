@@ -9,7 +9,8 @@ def main():
     deckList = generateCombinations(curDeck.getDeckList())
     print("Royal Flushes:", str(checkForRoyalFlushes(deckList)))
     print("Straight Flushes:", str(checkForStraightFlushes(deckList)))
-    print("Four of a Kinds:", str(checkFourOfAKind(deckList)))
+    print("Four of a Kinds:", str(checkFourOfAKinds(deckList)))
+    print("Full House:", str(checkFullHouses(deckList)))
     #checkHands(deckList)
 
 # there are 2598960 ways to get 5 cards from deck of 52 cards
@@ -125,7 +126,7 @@ def checkForStraightFlushes(deckList):
                 break
     return total
 
-def checkFourOfAKind(deckList):
+def checkFourOfAKinds(deckList):
     total = 0
     possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
     for i in range(len(deckList)):
@@ -134,10 +135,51 @@ def checkFourOfAKind(deckList):
                 #Found it!
                 total += 1
                 break
+    return total
 
+# Check for Full House
+# Three of a kind with a pair
+def checkFullHouses(deckList):
+    total = 0
+    hasThreeOfAKind = False
+    hasPair = False
+    possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
+    for i in range(len(deckList)):
+        # Find 3 of a kind
+        for j in range(len(possibleTypes)):
+            if(countCardsOfType(deckList[i], possibleTypes[j]) == 3):
+                #Found it!
+                hasThreeOfAKind = True
+                completedType = possibleTypes[j]
+                # Check for the pairs, only if a three of kind has been found
+                for k in range(len(possibleTypes)):
 
+                    if(countCardsOfType(deckList[i], possibleTypes[k]) == 2
+                    and possibleTypes[k] != completedType):
+                        #Found it with a pair!
+                        hasPair = True
+                        total += 1
+                        break
+                break
 
     return total
+
+def checkFlushs(deckList):
+    return
+
+def checkStraights(deckList):
+    return
+
+def checkThreeOfAKinds(deckList):
+    return
+
+def checkTwoPairs(deckList):
+    return
+
+def checkPairs(deckList):
+    return
+
+
 
 def checkForType(cardset, type):
     hasType = False
