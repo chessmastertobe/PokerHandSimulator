@@ -7,11 +7,27 @@ def main():
     curDeck = deck.Deck()
     curDeck.buildDeck()
     deckList = generateCombinations(curDeck.getDeckList())
-    print("Royal Flushes:", str(checkForRoyalFlushes(deckList)))
-    print("Straight Flushes:", str(checkForStraightFlushes(deckList)))
-    print("Four of a Kinds:", str(checkFourOfAKinds(deckList)))
-    print("Full House:", str(checkFullHouses(deckList)))
-    #checkHands(deckList)
+
+    RF = checkForRoyalFlushes(deckList)
+    SF = checkForStraightFlushes(deckList)
+    FK = checkFourOfAKinds(deckList)
+    FH = checkFullHouses(deckList)
+    F = checkFlushes(deckList)
+    S = checkStraights(deckList)
+    TK = checkThreeOfAKinds(deckList)
+    TP = checkTwoPairs(deckList)
+    P = checkPairs(deckList)
+
+    print("Royal Flushes:", str(RF))
+    print("Straight Flushes:", str(SF - RF))
+    print("Four of a Kinds:", str(FK))
+    print("Full House:", str(FH))
+    print("Flushes:", str(F - RF - SF))
+    print("Straight:", str(S - SF))
+    print("Three of a Kind:", str(TK - FH))
+    print("Two Pairs:", str(TP))
+    print("Pairs:", str(P - TP))
+    print("Nothing:", str(len(deckList) - RF - SF - FK - FH - F - S - TK - TP - P))
 
 # there are 2598960 ways to get 5 cards from deck of 52 cards
 def generateCombinations(lst):
@@ -30,36 +46,14 @@ def generateCombinations(lst):
 
 # recieves a list of touples of five length
 def checkHands(lst):
-        # Check for Royal Flushes
-        # A, K, Q, J, 10, all of the same suit
 
-        # Check for Straight Flushes
-        # Five cards in a sequence, all in the same suit
 
-        # Check for Four of a Kind
-        # All four cards of the same rank
-
-        # Check for Full House
-        # Three of a kind with a pair
-
-        # Check for Flush
-        # Any five cards of the same suit, but not in a sequnce
-
-        # Check for Straight
-        # Five cards in a squence, but not of the same suit
-
-        # Three of a Kind
-        # Three cards of the same rank
-
-        # Two Pair
-        # Two different pairs
-
-        # Pair
-        # Two cards of the same rank
 
         # If none of the above occur, then nothing
     return
 
+# Check for Royal Flushes
+# A, K, Q, J, 10, all of the same suit
 def checkForRoyalFlushes(deckList):
     #print(deckList[0][0].getColor())
     total = 0
@@ -92,6 +86,8 @@ def checkForRoyalFlushes(deckList):
 
     return total
 
+# Check for Straight Flushes
+# Five cards in a sequence, all in the same suit
 def checkForStraightFlushes(deckList):
     '''
     total = 0
@@ -126,6 +122,8 @@ def checkForStraightFlushes(deckList):
                 break
     return total
 
+# Check for Four of a Kind
+# All four cards of the same rank
 def checkFourOfAKinds(deckList):
     total = 0
     possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
@@ -164,20 +162,96 @@ def checkFullHouses(deckList):
 
     return total
 
-def checkFlushs(deckList):
-    return
+# Check for Flush
+# Any five cards of the same suit, but not in a sequnce
+# this includes Stright Flushes
+def checkFlushes(deckList):
+    total = 0
+    for i in range(len(deckList)):
+        if(checkAllSameSuit(deckList[i]) == True and checkAllSameColor(deckList[i])):
+            total += 1
 
+    return total
+
+# Check for Straight
+# Five cards in a squence, but not of the same suit
+# Includes Straight Flush
 def checkStraights(deckList):
-    return
+    total = 0
+    possibleSequences = [["ace", "two", "three", "four", "five"],
+    ["two", "three", "four", "five", "six"],
+    ["three", "four", "five", "six", "seven"],
+    ["four", "five", "six", "seven", "eight"],
+    ["five", "six", "seven", "eight", "nine"],
+    ["six", "seven", "eight", "nine", "ten"],
+    ["seven", "eight", "nine", "ten", "jack"],
+    ["eight", "nine", "ten", "jack", "queen"],
+    ["nine", "ten", "jack", "queen", "king"],
+    ["ten", "jack", "queen", "king", "ace"]]
 
+    for i in range(len(deckList)):
+        for j in range(len(possibleSequences)):
+            if(checkForType(deckList[i], possibleSequences[j][0]) == True
+            and checkForType(deckList[i], possibleSequences[j][1]) == True
+            and checkForType(deckList[i], possibleSequences[j][2]) == True
+            and checkForType(deckList[i], possibleSequences[j][3]) == True
+            and checkForType(deckList[i], possibleSequences[j][4]) == True):
+                total += 1
+                break
+    return total
+
+# Three of a Kind
+# Three cards of the same rank
 def checkThreeOfAKinds(deckList):
-    return
+    total = 0
+    possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
+    for i in range(len(deckList)):
+        # Find 3 of a kind
+        for j in range(len(possibleTypes)):
+            if(countCardsOfType(deckList[i], possibleTypes[j]) == 3):
+                #Found it!
+                total += 1
+                break
 
+    return total
+
+# Two Pair
+# Two different pairs
 def checkTwoPairs(deckList):
-    return
+    total = 0
+    possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
+    for i in range(len(deckList)):
+        # Find 2 of a kind
+        for j in range(len(possibleTypes)):
+            if(countCardsOfType(deckList[i], possibleTypes[j]) == 2):
+                #Found it!
+                completedType = possibleTypes[j]
+                # Check for the pairs, only if a three of kind has been found
+                for k in range(len(possibleTypes)):
 
+                    if(countCardsOfType(deckList[i], possibleTypes[k]) == 2
+                    and possibleTypes[k] != completedType):
+                        #Found it with a pair!
+                        total += 1
+                        break
+                break
+
+    return total
+
+# Pair
+# Two cards of the same rank
 def checkPairs(deckList):
-    return
+    total = 0
+    possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
+    for i in range(len(deckList)):
+        # Find 2 of a kind
+        for j in range(len(possibleTypes)):
+            if(countCardsOfType(deckList[i], possibleTypes[j]) == 2):
+                #Found it!
+                total += 1
+                break
+
+    return total
 
 
 
