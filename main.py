@@ -7,8 +7,10 @@ def main():
     curDeck = deck.Deck()
     curDeck.buildDeck()
     deckList = generateCombinations(curDeck.getDeckList())
-    print("RoyalFlushes:", str(checkForRoyalFlushes(deckList)))
-    checkHands(deckList)
+    print("Royal Flushes:", str(checkForRoyalFlushes(deckList)))
+    print("Straight Flushes:", str(checkForStraightFlushes(deckList)))
+    print("Four of a Kinds:", str(checkFourOfAKind(deckList)))
+    #checkHands(deckList)
 
 # there are 2598960 ways to get 5 cards from deck of 52 cards
 def generateCombinations(lst):
@@ -31,7 +33,7 @@ def checkHands(lst):
         # A, K, Q, J, 10, all of the same suit
 
         # Check for Straight Flushes
-        # Five cards in a sequence, all in the same uit
+        # Five cards in a sequence, all in the same suit
 
         # Check for Four of a Kind
         # All four cards of the same rank
@@ -89,6 +91,54 @@ def checkForRoyalFlushes(deckList):
 
     return total
 
+def checkForStraightFlushes(deckList):
+    '''
+    total = 0
+    for i in range(len(deckList)):
+        if(evalutateSequence(deckList[i]) == True
+        and checkAllSameSuit(deckList[i]) == True
+        and checkAllSameColor(deckList[i]) == True):
+            total += 1
+    '''
+    total = 0
+    possibleSequences = [["ace", "two", "three", "four", "five"],
+    ["two", "three", "four", "five", "six"],
+    ["three", "four", "five", "six", "seven"],
+    ["four", "five", "six", "seven", "eight"],
+    ["five", "six", "seven", "eight", "nine"],
+    ["six", "seven", "eight", "nine", "ten"],
+    ["seven", "eight", "nine", "ten", "jack"],
+    ["eight", "nine", "ten", "jack", "queen"],
+    ["nine", "ten", "jack", "queen", "king"],
+    ["ten", "jack", "queen", "king", "ace"]]
+
+    for i in range(len(deckList)):
+        for j in range(len(possibleSequences)):
+            if(checkForType(deckList[i], possibleSequences[j][0]) == True
+            and checkForType(deckList[i], possibleSequences[j][1]) == True
+            and checkForType(deckList[i], possibleSequences[j][2]) == True
+            and checkForType(deckList[i], possibleSequences[j][3]) == True
+            and checkForType(deckList[i], possibleSequences[j][4]) == True
+            and checkAllSameSuit(deckList[i]) == True
+            and checkAllSameColor(deckList[i]) == True):
+                total += 1
+                break
+    return total
+
+def checkFourOfAKind(deckList):
+    total = 0
+    possibleTypes = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
+    for i in range(len(deckList)):
+        for j in range(len(possibleTypes)):
+            if(countCardsOfType(deckList[i], possibleTypes[j]) == 4):
+                #Found it!
+                total += 1
+                break
+
+
+
+    return total
+
 def checkForType(cardset, type):
     hasType = False
     for i in range(len(cardset)):
@@ -118,8 +168,43 @@ def checkAllSameColor(cardset):
     # if the counter is 5, then they are all in the same suit
     return counter == 5
 
-def evalutateSeries(cardset):
-    return
+def countCardsOfType(cardset, type):
+    total = 0
+    for i in range(len(cardset)):
+        if(cardset[i].getType() == type):
+            total += 1
+    return total
+
+def evalutateSequence(cardset):
+    # checks if we have a set in order
+    # Possible sets include:
+    # ace, 2, 3, 4, 5
+    # ...
+    # ten, jack, queen, king, ace
+
+    # Should be fourty different ones
+    possibleSequences = [["ace", "two", "three", "four", "five"],
+    ["two", "three", "four", "five", "six"],
+    ["three", "four", "five", "six", "seven"],
+    ["four", "five", "six", "seven", "eight"],
+    ["five", "six", "seven", "eight", "nine"],
+    ["six", "seven", "eight", "nine", "ten"],
+    ["seven", "eight", "nine", "ten", "jack"],
+    ["eight", "nine", "ten", "jack", "queen"],
+    ["nine", "ten", "jack", "queen", "king"],
+    ["ten", "jack", "queen", "king", "ace"]]
+
+    hasAll = False
+    for i in range(len(possibleSequences)):
+        counter = 0
+        for j in range(len(possibleSequences[i])):
+            if(checkForType(cardset, possibleSequences[i][j]) == True):
+                counter += 1
+        if counter == 5:
+            #Found it!!
+            hasAll = True
+            break
+    return hasAll
 
 
 
