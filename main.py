@@ -22,12 +22,12 @@ def main():
     print("Straight Flushes:", str(SF - RF))
     print("Four of a Kinds:", str(FK))
     print("Full House:", str(FH))
-    print("Flushes:", str(F - RF - SF))
+    print("Flushes:", str(F - SF))
     print("Straight:", str(S - SF))
     print("Three of a Kind:", str(TK - FH))
     print("Two Pairs:", str(TP))
-    print("Pairs:", str(P - TP))
-    print("Nothing:", str(len(deckList) - RF - SF - FK - FH - F - S - TK - TP - P))
+    print("Pairs:", str(P - TP - FH))
+    print("Nothing:", str(len(deckList) - RF - SF + RF - FK - FH - F + SF - S + SF - TK + FH - TP - P + TP + FH))
 
 # there are 2598960 ways to get 5 cards from deck of 52 cards
 def generateCombinations(lst):
